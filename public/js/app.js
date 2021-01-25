@@ -1971,9 +1971,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       joke: {}
     };
   },
-  // computed: mapGetters({
-  //     messages: 'messages'
-  // })
   methods: _objectSpread({
     notEmptyObject: function notEmptyObject(obj) {
       return Object.keys(obj).length;
@@ -2123,7 +2120,9 @@ function getJokesApi(cb) {
 
 function _saveJoke(data, cb) {
   api.post('/api/jokes', data).then(function (response) {
-    cb(response);
+    cb({
+      status: 201
+    });
   })["catch"](function (error) {
     console.log(error);
   });
@@ -2285,12 +2284,12 @@ vue__WEBPACK_IMPORTED_MODULE_2__.default.use(vue_router__WEBPACK_IMPORTED_MODULE
     name: 'Index',
     component: _components_Jokes_Overview_vue__WEBPACK_IMPORTED_MODULE_0__.default
   }, {
-    path: '/jokes/edit/:id',
-    name: 'Edit',
-    component: _components_Jokes_Edit_vue__WEBPACK_IMPORTED_MODULE_1__.default
-  }, {
     path: '/jokes/create',
     name: 'Create',
+    component: _components_Jokes_Edit_vue__WEBPACK_IMPORTED_MODULE_1__.default
+  }, {
+    path: '/jokes/edit/:id',
+    name: 'Edit',
     component: _components_Jokes_Edit_vue__WEBPACK_IMPORTED_MODULE_1__.default
   }]
 }));
@@ -2359,7 +2358,6 @@ var actions = {
   // Save data
   saveJoke: function saveJoke(_ref2, data) {
     var commit = _ref2.commit;
-    console.log(data);
     _api_jokes__WEBPACK_IMPORTED_MODULE_0__.default.saveJoke(data, function (response) {
       if (response.status === 201) {
         state.message = 'Stored data successfully';

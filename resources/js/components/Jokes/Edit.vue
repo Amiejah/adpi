@@ -46,7 +46,7 @@
 
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+    import { mapActions } from 'vuex'
     export default {
         name: 'edit',
         data() {
@@ -54,9 +54,6 @@ import { mapActions, mapGetters } from 'vuex'
                 joke: {}
             }
         },
-        // computed: mapGetters({
-        //     messages: 'messages'
-        // })
         methods: {
             notEmptyObject(obj) {
                 return Object.keys(obj).length;

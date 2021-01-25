@@ -17,7 +17,7 @@ function getJokesApi(cb) {
 function saveJoke( data, cb ) {
     api.post('/api/jokes', data)
         .then((response) => {
-            cb(response);
+            cb({status: 201})
         })
         .catch((error) => {
             console.log(error);

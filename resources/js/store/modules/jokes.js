@@ -24,7 +24,6 @@ const actions = {
     },
     // Save data
     saveJoke ({commit}, data) {
-        console.log(data);
         JokesApi.saveJoke(data, (response) => {
             if (response.status === 201) {
                 state.message = 'Stored data successfully'

@@ -2,22 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreJokeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Jokes\JokesInterface;
 
 class JokeController extends Controller
 {
+    private $jokes;
+
+    public function __construct(JokesInterface $jokes) {
+        $this->jokes = $jokes;
+    }
+
     /**
+     *
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        if ($this->checkCreateFile()) {
-            $response = $this->checkCreateFile();
+        if ($this->jokes->checkFile()) {
+            $response = $this->jokes->checkFile();
             return json_decode($response);
         }
     }
@@ -29,7 +38,7 @@ class JokeController extends Controller
      */
     public function create()
     {
-        //
+        return 'testing';
     }
 
     /**
@@ -38,11 +47,10 @@ class JokeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreJokeRequest $request)
     {
+        $collections = $this->jokes->getFileData();
 
-
-        $collections = $this->fetchCollection();
         $collections->push([
             'id' => rand(1, 200),
             'punchline' => $request->input('punchline'),
@@ -50,10 +58,9 @@ class JokeController extends Controller
             'type' => 'programming',
         ]);
 
-        Storage::disk('local')->put(config('api.file_name'), json_encode($collections));
+        $this->jokes->updateFileData( $collections );
 
-        return response()->json($collections);
-
+        return response()->json($this->jokes->getFileData());
     }
 
     /**
@@ -64,8 +71,9 @@ class JokeController extends Controller
      */
     public function show($id)
     {
-        $collections = $this->fetchCollection();
-        return response()->json(collect($collections)->where('id', $id)->first());
+        $collections = $this->jokes->getFileData();
+        $item = collect($collections)->where('id', $id)->first();
+        return response()->json( $item );
     }
 
     /**
@@ -86,10 +94,9 @@ class JokeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreJokeRequest $request, $id)
     {
-        $collections = $this->fetchCollection();
-
+        $collections = $this->jokes->getFileData();
         foreach($collections as $item) {
             if ( $item->id == $id ) {
                 $item->punchline = $request->input('punchline');
@@ -113,48 +120,4 @@ class JokeController extends Controller
         //
     }
 
-    /**
-     * JSON file is used instead of the db
-     *
-     * @return boolean
-     */
-    private function checkCreateFile() {
-        if ( ! Storage::disk('local')->exists(config('api.file_name')) ) {
-            $response = Http::withHeaders(['accept' => 'application/json'])
-                ->get(config('api.base_url'))
-                ->json();
-
-            Storage::disk('local')->put(config('api.file_name'), json_encode($response));
-
-            return Storage::get(config('api.file_name'));
-        }
-
-        return Storage::get(config('api.file_name'));
-
-    }
-
-    /**
-     * Collects the data and returns is as a collection.
-     *
-     */
-    private function fetchCollection() {
-        $file = Storage::get(config('api.file_name'));
-        $data = json_decode($file);
-        $collections = new Collection();
-
-        foreach($data as $item) {
-            $collections->push((object)[
-                'id' => $item->id,
-                'punchline'=> $item->punchline,
-                'setup'=> $item->setup,
-                'type'=> $item->type,
-            ]);
-        }
-
-        return $collections;
-    }
-
-    private function writeCollectionTofile() {
-
-    }
 }

@@ -14,14 +14,14 @@ export default new Router({
             component: Overview
         },
         {
+            path: '/jokes/create',
+            name: 'Create',
+            component: Edit,
+        },
+        {
             path: '/jokes/edit/:id',
             name: 'Edit',
             component: Edit
         },
-        {
-            path: '/jokes/create',
-            name: 'Create',
-            component: Edit,
-        }
     ]
 });
