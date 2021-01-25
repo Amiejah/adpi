@@ -70,13 +70,13 @@ import { mapActions, mapGetters } from 'vuex'
                     })
             },
             setCb (joke) {
-                console.log(joke['id']);
                 if (joke['id']) {
                     this.updateJoke(joke);
                 } else {
                     this.saveJoke(joke);
                 }
 
+                this.$router.push({ path: '/' })
             },
             ...mapActions(['updateJoke', 'saveJoke'])
         },

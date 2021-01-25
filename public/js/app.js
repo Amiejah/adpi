@@ -1988,13 +1988,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     setCb: function setCb(joke) {
-      console.log(joke['id']);
-
       if (joke['id']) {
         this.updateJoke(joke);
       } else {
         this.saveJoke(joke);
       }
+
+      this.$router.push({
+        path: '/'
+      });
     }
   }, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)(['updateJoke', 'saveJoke'])),
   created: function created() {
