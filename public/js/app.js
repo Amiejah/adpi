@@ -2364,8 +2364,6 @@ var actions = {
       if (response.status === 201) {
         state.message = 'Stored data successfully';
       }
-
-      commit('getAllJokes');
     });
   },
   // Update joke
@@ -2375,8 +2373,6 @@ var actions = {
       if (response.status === 201) {
         state.message = 'Joke is updated, ha-ha';
       }
-
-      commit('getAllJokes');
     });
   }
 };
